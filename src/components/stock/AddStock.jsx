@@ -72,7 +72,7 @@ export default function AddStock({
               variant={type === "raw" ? "contained" : "outlined"}
               onClick={() => {
                 setType("raw");
-                values.type = "raw";
+                values.itemType = "raw";
               }}
             >
               Row Materials and Resource
@@ -81,7 +81,7 @@ export default function AddStock({
               variant={type === "yield" ? "contained" : "outlined"}
               onClick={() => {
                 setType("yield");
-                values.type = "yield";
+                values.itemType = "yield";
               }}
             >
               Yield

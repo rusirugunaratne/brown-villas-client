@@ -1,80 +1,102 @@
 import { Box, Button, ButtonGroup, Stack } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import MaterialReactTable from "material-react-table";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import AddStock from "./AddStock";
 import useForm from "../../hooks/useForm";
+import { ENDPOINTS, createAPIEndpoint } from "../../api";
 
 function ManageStockItems() {
-  const items = [
-    {
-      itemName: "Fertilizer",
-      itemCode: "1342R",
-      itemUOM: "Kg",
-      itemType: "yield",
-    },
-    {
-      itemName: "Pesticide",
-      itemCode: "3579T",
-      itemUOM: "Litres",
-      itemType: "raw",
-    },
-    {
-      itemName: "Seed",
-      itemCode: "2586M",
-      itemUOM: "Units",
-      itemType: "yield",
-    },
-    {
-      itemName: "Herbicide",
-      itemCode: "9635A",
-      itemUOM: "Litres",
-      itemType: "raw",
-    },
-    {
-      itemName: "Fungicide",
-      itemCode: "7410L",
-      itemUOM: "Litres",
-      itemType: "raw",
-    },
-    {
-      itemName: "Plant Growth Regulator",
-      itemCode: "4028C",
-      itemUOM: "Litres",
-      itemType: "yield",
-    },
-    {
-      itemName: "Insecticide",
-      itemCode: "6809P",
-      itemUOM: "Units",
-      itemType: "raw",
-    },
-    {
-      itemName: "Fertilizer",
-      itemCode: "1924S",
-      itemUOM: "Kg",
-      itemType: "yield",
-    },
-    {
-      itemName: "Fertilizer",
-      itemCode: "5381D",
-      itemUOM: "Kg",
-      itemType: "yield",
-    },
-    {
-      itemName: "Herbicide",
-      itemCode: "3197B",
-      itemUOM: "Litres",
-      itemType: "raw",
-    },
-  ];
+  const [items, setItems] = useState([]);
+  const [type, setType] = useState("yield");
+
+  useEffect(() => {
+    createAPIEndpoint(ENDPOINTS.stock)
+      .fetch()
+      .then((res) => {
+        console.log(res);
+        setItems(res.data);
+      });
+  }, []);
+
+  const deleteStock = (id) => {
+    createAPIEndpoint(ENDPOINTS.stock)
+      .delete(id)
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      });
+  };
+
+  // const items = [
+  //   {
+  //     itemName: "Fertilizer",
+  //     itemCode: "1342R",
+  //     itemUOM: "Kg",
+  //     itemType: "yield",
+  //   },
+  //   {
+  //     itemName: "Pesticide",
+  //     itemCode: "3579T",
+  //     itemUOM: "Litres",
+  //     itemType: "raw",
+  //   },
+  //   {
+  //     itemName: "Seed",
+  //     itemCode: "2586M",
+  //     itemUOM: "Units",
+  //     itemType: "yield",
+  //   },
+  //   {
+  //     itemName: "Herbicide",
+  //     itemCode: "9635A",
+  //     itemUOM: "Litres",
+  //     itemType: "raw",
+  //   },
+  //   {
+  //     itemName: "Fungicide",
+  //     itemCode: "7410L",
+  //     itemUOM: "Litres",
+  //     itemType: "raw",
+  //   },
+  //   {
+  //     itemName: "Plant Growth Regulator",
+  //     itemCode: "4028C",
+  //     itemUOM: "Litres",
+  //     itemType: "yield",
+  //   },
+  //   {
+  //     itemName: "Insecticide",
+  //     itemCode: "6809P",
+  //     itemUOM: "Units",
+  //     itemType: "raw",
+  //   },
+  //   {
+  //     itemName: "Fertilizer",
+  //     itemCode: "1924S",
+  //     itemUOM: "Kg",
+  //     itemType: "yield",
+  //   },
+  //   {
+  //     itemName: "Fertilizer",
+  //     itemCode: "5381D",
+  //     itemUOM: "Kg",
+  //     itemType: "yield",
+  //   },
+  //   {
+  //     itemName: "Herbicide",
+  //     itemCode: "3197B",
+  //     itemUOM: "Litres",
+  //     itemType: "raw",
+  //   },
+  // ];
   const getFreshModel = () => ({
     itemName: "",
     itemCode: "",
     itemQuantity: 0,
     itemUOM: "Unit",
-    type: "yield",
+    itemType: "yield",
   });
 
   const { values, setValues, errors, setErrors, handleInputChange } =
@@ -93,33 +115,15 @@ function ManageStockItems() {
   };
 
   const addStock = (stock) => {
-    console.log(stock);
+    stock.itemQuantity = parseInt(stock.itemQuantity);
+    console.log("stock", stock);
+    createAPIEndpoint(ENDPOINTS.stock)
+      .post(stock)
+      .then((res) => console.log(res));
     items.push(stock);
     setOpen(false);
-  };
-
-  const [data, setData] = useState(
-    items.filter((item) => {
-      return item.itemType === "raw";
-    })
-  );
-
-  const setRowMaterials = () => {
-    setData(
-      items.filter((item) => {
-        return item.itemType === "raw";
-      })
-    );
-    console.log(data);
-  };
-
-  const setYield = () => {
-    setData(
-      items.filter((item) => {
-        return item.itemType === "yield";
-      })
-    );
-    console.log(data);
+    setValues(getFreshModel());
+    window.location.reload();
   };
 
   const columns = useMemo(
@@ -141,7 +145,7 @@ function ManageStockItems() {
         Cell: ({ cell, row }) => {
           return (
             <Button
-              onClick={() => console.log(row, cell)}
+              onClick={() => deleteStock(row.original._id)}
               variant='contained'
               color='error'
               startIcon={<DeleteForeverIcon />}
@@ -178,10 +182,10 @@ function ManageStockItems() {
       >
         <Stack direction={"column"}>
           <ButtonGroup variant='outlined' aria-label='outlined button group'>
-            <Button onClick={() => setRowMaterials()}>
+            <Button onClick={() => setType("raw")}>
               Row Materials and Resource
             </Button>
-            <Button onClick={() => setYield()}>Yield</Button>
+            <Button onClick={() => setType("yield")}>Yield</Button>
             <Button
               onClick={() => handleClickOpen()}
               variant='contained'
@@ -190,7 +194,12 @@ function ManageStockItems() {
               Add
             </Button>
           </ButtonGroup>
-          <MaterialReactTable columns={columns} data={data} />
+          <MaterialReactTable
+            columns={columns}
+            data={items?.filter((stock) => {
+              return stock.itemType === type;
+            })}
+          />
         </Stack>
       </Stack>
     </>
