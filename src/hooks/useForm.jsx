@@ -4,11 +4,8 @@ export default function useForm(getFreshModelObject) {
   const [values, setValues] = useState(getFreshModelObject());
   const [errors, setErrors] = useState({});
 
-  console.log("values", values);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setValues({
       ...values,
       [name]: value,

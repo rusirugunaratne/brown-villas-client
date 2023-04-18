@@ -17,6 +17,7 @@ export default function AddStock({
   handleInputChange,
 }) {
   const [type, setType] = React.useState("yield");
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>

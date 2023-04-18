@@ -8,6 +8,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AddIcon from "@mui/icons-material/Add";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { ButtonGroup } from "@mui/material";
 
 export default function UpdateStock({
   open,
@@ -16,7 +18,7 @@ export default function UpdateStock({
   values,
   handleInputChange,
 }) {
-  const [type, setType] = React.useState("yield");
+  const [status, setStatus] = React.useState(values.itemStatus);
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -26,7 +28,7 @@ export default function UpdateStock({
           <TextField
             autoFocus
             margin='dense'
-            name='itemName'
+            name='itemQuantity'
             label='Quantity'
             fullWidth
             variant='standard'
@@ -34,6 +36,26 @@ export default function UpdateStock({
             value={values.itemQuantity}
             onChange={handleInputChange}
           />
+          <ButtonGroup variant='outlined' aria-label='outlined button group'>
+            <Button
+              variant={status === "received" ? "contained" : "outlined"}
+              onClick={() => {
+                values.itemStatus = "received";
+                setStatus("received");
+              }}
+            >
+              Received Stock
+            </Button>
+            <Button
+              variant={status === "dispatched" ? "contained" : "outlined"}
+              onClick={() => {
+                values.itemStatus = "dispatched";
+                setStatus("dispatched");
+              }}
+            >
+              Dispatched Stock
+            </Button>
+          </ButtonGroup>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose()}>Cancel</Button>

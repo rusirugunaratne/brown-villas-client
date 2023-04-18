@@ -28,75 +28,13 @@ function ManageStockItems() {
         window.location.reload();
       });
   };
-
-  // const items = [
-  //   {
-  //     itemName: "Fertilizer",
-  //     itemCode: "1342R",
-  //     itemUOM: "Kg",
-  //     itemType: "yield",
-  //   },
-  //   {
-  //     itemName: "Pesticide",
-  //     itemCode: "3579T",
-  //     itemUOM: "Litres",
-  //     itemType: "raw",
-  //   },
-  //   {
-  //     itemName: "Seed",
-  //     itemCode: "2586M",
-  //     itemUOM: "Units",
-  //     itemType: "yield",
-  //   },
-  //   {
-  //     itemName: "Herbicide",
-  //     itemCode: "9635A",
-  //     itemUOM: "Litres",
-  //     itemType: "raw",
-  //   },
-  //   {
-  //     itemName: "Fungicide",
-  //     itemCode: "7410L",
-  //     itemUOM: "Litres",
-  //     itemType: "raw",
-  //   },
-  //   {
-  //     itemName: "Plant Growth Regulator",
-  //     itemCode: "4028C",
-  //     itemUOM: "Litres",
-  //     itemType: "yield",
-  //   },
-  //   {
-  //     itemName: "Insecticide",
-  //     itemCode: "6809P",
-  //     itemUOM: "Units",
-  //     itemType: "raw",
-  //   },
-  //   {
-  //     itemName: "Fertilizer",
-  //     itemCode: "1924S",
-  //     itemUOM: "Kg",
-  //     itemType: "yield",
-  //   },
-  //   {
-  //     itemName: "Fertilizer",
-  //     itemCode: "5381D",
-  //     itemUOM: "Kg",
-  //     itemType: "yield",
-  //   },
-  //   {
-  //     itemName: "Herbicide",
-  //     itemCode: "3197B",
-  //     itemUOM: "Litres",
-  //     itemType: "raw",
-  //   },
-  // ];
   const getFreshModel = () => ({
     itemName: "",
     itemCode: "",
     itemQuantity: 0,
     itemUOM: "Unit",
     itemType: "yield",
+    itemStatus: "received",
   });
 
   const { values, setValues, errors, setErrors, handleInputChange } =
@@ -119,11 +57,13 @@ function ManageStockItems() {
     console.log("stock", stock);
     createAPIEndpoint(ENDPOINTS.stock)
       .post(stock)
-      .then((res) => console.log(res));
-    items.push(stock);
-    setOpen(false);
-    setValues(getFreshModel());
-    window.location.reload();
+      .then((res) => {
+        console.log(res);
+        items.push(stock);
+        setOpen(false);
+        setValues(getFreshModel());
+        // window.location.reload();
+      });
   };
 
   const columns = useMemo(
@@ -182,13 +122,22 @@ function ManageStockItems() {
       >
         <Stack direction={"column"}>
           <ButtonGroup variant='outlined' aria-label='outlined button group'>
-            <Button onClick={() => setType("raw")}>
+            <Button
+              variant={type === "raw" ? "contained" : "outlined"}
+              onClick={() => setType("raw")}
+            >
               Row Materials and Resource
             </Button>
-            <Button onClick={() => setType("yield")}>Yield</Button>
+            <Button
+              variant={type === "yield" ? "contained" : "outlined"}
+              onClick={() => setType("yield")}
+            >
+              Yield
+            </Button>
             <Button
               onClick={() => handleClickOpen()}
               variant='contained'
+              color='secondary'
               startIcon={<AddIcon />}
             >
               Add
