@@ -62,7 +62,7 @@ function ManageStockItems() {
         items.push(stock);
         setOpen(false);
         setValues(getFreshModel());
-        // window.location.reload();
+        window.location.reload();
       });
   };
 

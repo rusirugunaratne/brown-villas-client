@@ -1,9 +1,6 @@
 import { Box, Button, ButtonGroup, Stack } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import MaterialReactTable from "material-react-table";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import AddIcon from "@mui/icons-material/Add";
-import AddStock from "./AddStock";
 import useForm from "../../hooks/useForm";
 import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import UpdateStock from "./UpdateStock";
